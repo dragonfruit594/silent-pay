@@ -31,8 +31,8 @@ const EmployeeDashboard: React.FC<EmployeeDashboardProps> = ({
 
   const salaryNumber = typeof monthlySalary === 'number' ? monthlySalary : undefined;
   // Allow claiming even if salary isn't revealed yet (it can still succeed on-chain).
-  // Only hard-disable when we know it's 0, or while loading.
-  const claimDisabled = loading || salaryNumber === 0;
+  // Only hard-disable when we know it's 0, or while claim operation is in progress.
+  const claimDisabled = claim.busy || salaryNumber === 0;
 
   const btnBase = 'w-full py-2.5 rounded-lg text-sm font-semibold transition-colors';
   const revealWallet = useImmediateAsyncAction();
@@ -105,7 +105,7 @@ const EmployeeDashboard: React.FC<EmployeeDashboardProps> = ({
           <div className="mt-auto pt-4">
             <button
               onClick={() => {
-                if (claimDisabled || claim.busy) return;
+                if (claimDisabled) return;
                 claim.run(async () => {
                   try {
                     await onClaim();
@@ -114,7 +114,7 @@ const EmployeeDashboard: React.FC<EmployeeDashboardProps> = ({
                   }
                 });
               }}
-              disabled={claimDisabled || claim.busy}
+              disabled={claimDisabled}
               className={`${btnBase} ${
                 claim.busy
                   ? 'bg-indigo-700 text-white cursor-wait transition-none duration-0'
