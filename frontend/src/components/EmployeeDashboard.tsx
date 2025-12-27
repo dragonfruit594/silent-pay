@@ -29,15 +29,15 @@ const EmployeeDashboard: React.FC<EmployeeDashboardProps> = ({
 }) => {
   const recent = useMemo(() => history.slice(0, 10), [history]);
 
-  const salaryNumber = typeof monthlySalary === 'number' ? monthlySalary : undefined;
-  // Allow claiming even if salary isn't revealed yet (it can still succeed on-chain).
-  // Only hard-disable when we know it's 0, or while claim operation is in progress.
-  const claimDisabled = claim.busy || salaryNumber === 0;
-
   const btnBase = 'w-full py-2.5 rounded-lg text-sm font-semibold transition-colors';
   const revealWallet = useImmediateAsyncAction();
   const revealSalary = useImmediateAsyncAction();
   const claim = useImmediateAsyncAction();
+
+  const salaryNumber = typeof monthlySalary === 'number' ? monthlySalary : undefined;
+  // Allow claiming even if salary isn't revealed yet (it can still succeed on-chain).
+  // Only hard-disable when we know it's 0, or while claim operation is in progress.
+  const claimDisabled = claim.busy || salaryNumber === 0;
 
   return (
     <div className="space-y-6">
